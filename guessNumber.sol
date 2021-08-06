@@ -1,33 +1,31 @@
 pragma solidity ^0.8.1;
 contract guess_number{
 
-    uint secretNumber;
-
-    enum State {ACTIVE, COMPLETE}
+    address payable player;
+    uint private secretNumber;
+    enum State {OPEN, COMPLETE}
     State public currState;
-    uint balance;
+    uint public balance;
 
     contructor (uint _secretNumber) payable {
         require(msg.value >= 10*10**18, 'this contract needs to be funded with 10 Eth');
         secretNumber = _secretNumber;
-        balance = msg.value;
+        currState = State.OPEN;
+        balance = balance + msg.value;
     }
 
     function getBalance() public view returns (uint) {
         return balance;
     }
 
-    function play(address payable player, uint _numberGuess) external payable returns (uint) {
-        require(msg.value >= 10**18, 'pay at least one Eth to gain');
-        require(currState == State.ACTIVE, 'Too late');
+    function play(uint guessedNumber, address _player) external payable {
+        require(msg.value == 10**18, 'you must pay to play');
+        require(currState == State.OPEN);
+        player = payable(_player);
         balance = balance + msg.value;
-        if (_numberGuess == secretNumber){
+        if (guessedNumber == secretNumber){
             player.transfer(address(this).balance);
-            currState.State.COMPLETE;
-            return balance;
-        }
-        else{
-            return balance;
+            currState = State.COMPLETE;
         }
     }
 
