@@ -7,7 +7,7 @@ contract guess_number{
     State public currState;
     uint public balance;
 
-    contructor (uint _secretNumber) payable {
+    constructor (uint _secretNumber) payable {
         require(msg.value >= 10*10**18, 'this contract needs to be funded with 10 Eth');
         secretNumber = _secretNumber;
         currState = State.OPEN;
