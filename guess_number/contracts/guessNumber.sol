@@ -26,6 +26,7 @@ contract guess_number{
         if (guessedNumber == secretNumber){
             player.transfer(address(this).balance);
             currState = State.COMPLETE;
+            balance = 0;
         }
     }
 
